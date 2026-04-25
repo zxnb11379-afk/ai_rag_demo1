@@ -48,7 +48,7 @@ Flask API 接收
 
 
 ## 核心代码（简化）
-
+#
 from flask import Flask, request, jsonify
 from openai import OpenAI
 
@@ -90,7 +90,7 @@ python app.py
 
 
 测试接口：
-
+#
 Invoke-RestMethod -Uri "http://127.0.0.1:5000/ask" `
   -Method POST `
   -ContentType "application/json" `
