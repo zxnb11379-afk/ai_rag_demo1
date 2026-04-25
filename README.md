@@ -43,7 +43,7 @@ Flask API 接收
 ├── ai_demo/
 │ ├── app.py # Flask服务
 │ ├── knowledge.txt # 本地知识库
-│ └── README.md
+├── README.md
 ```
 
 ---
