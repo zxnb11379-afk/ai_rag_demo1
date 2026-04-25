@@ -36,7 +36,7 @@ Flask API 接收
 ├── ai_demo/
 │ ├── app.py # Flask服务
 │ ├── knowledge.txt # 本地知识库
-│ └── README.md
+├── README.md
 
 
 ## 知识库示例
@@ -47,43 +47,41 @@ Flask API 接收
 周勋有RAG项目经验。
 
 
-## ⚙️ 核心代码（简化）
+## 核心代码（简化）
 
 from flask import Flask, request, jsonify
 from openai import OpenAI
-import os
-print("当前文件路径：", os.path.abspath(__file__))
+
 app = Flask(__name__)
-
-# 配置 DeepSeek API
-client = OpenAI(
-    api_key="your_api_key",
-    base_url="https://api.deepseek.com"
-)
-
-# 读取本地知识库
-with open("knowledge.txt", "r", encoding="utf-8") as f:
-    knowledge = f.read()
+client = OpenAI(api_key="your_api_key")
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.get_json(silent=True)
-    if not data:
-        return jsonify({"error": "Invalid JSON"}), 400
+    data = request.json
+    question = data.get("question")
 
-    question = data.get("question", "").strip()
+    # 读取知识库
+    with open("knowledge.txt", "r", encoding="utf-8") as f:
+        knowledge = f.read()
 
-    print("用户问题:", question)
+    # 构造Prompt
+    prompt = f"""
+    参考资料：
+    {knowledge}
 
-    # 命中知识库
-    if "周勋" in question:
-        return jsonify({"answer": "南京工业大学"})
+    用户问题：
+    {question}
 
-    # 默认兜底（非常重要）
-    return jsonify({"answer": "资料中没有相关信息"})
-if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    请基于参考资料回答：
+    """
 
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[{"role": "user", "content": prompt}]
+    )
+
+    answer = response.choices[0].message.content
+    return jsonify({"answer": answer})
 
 ## 运行方式
 
@@ -93,12 +91,10 @@ python app.py
 
 测试接口：
 
-Invoke-RestMethod -Uri "http://127.0.0.1:5001/ask" `
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/ask" `
   -Method POST `
   -ContentType "application/json" `
-  -Body '{"question":"周勋毕业于哪所大学？"}'
-
-
+  -Body ([System.Text.Encoding]::UTF8.GetBytes('{"question":"周勋毕业于哪所大学？"}'))
 
 
 ## 项目局限性
