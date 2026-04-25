@@ -110,12 +110,67 @@ python app.py
 Invoke-RestMethod -Uri "http://127.0.0.1:5000/ask" `
   -Method POST `
   -ContentType "application/json" `
-  -Body '{"question":"周勋毕业于哪所大学？"}'
+  -Body ([System.Text.Encoding]::UTF8.GetBytes('{"question":"周勋毕业于哪所大学？"}'))
 ```
 
-**Windows PowerShell 中文乱码问题（重要）**
+
+##  项目局限性
+
+该 Demo 为教学/验证版本，存在以下问题：
+
+### 无真正检索（伪RAG）
+
+* 直接把整个 knowledge.txt 拼进 Prompt
+* ❌ 无向量检索
+* ❌ 无 Top-K
+
+---
+
+### Prompt 容易失控
+
+* 模型可能忽略上下文
+* 容易出现幻觉
+
+---
+
+### 无工程化能力
+
+* ❌ 无工作流编排
+* ❌ 无多节点处理
+* ❌ 无可视化调试
+
+---
+
+##  遇到的关键问题 & 解决方案
+
+### OpenAI / API 402 错误
+
+**问题：**
+
+```text
+Insufficient Balance
+```
+
+**原因：**
+API余额不足
+
+**解决：**
+
+* 更换本地模型（Ollama）
+* 或充值API
+
+---
+
+**Windows PowerShell 中文乱码问题**
 
 在 PowerShell 中直接传 JSON 字符串时，服务端可能收到乱码：
+
+```powershell
+Invoke-RestMethod -Uri "http://127.0.0.1:5000/ask" `
+  -Method POST `
+  -ContentType "application/json" `
+  -Body '{"question":"周勋毕业于哪所大学？"}'
+```
 
 ```text
 ??????????
@@ -152,39 +207,11 @@ Invoke-RestMethod -Uri "http://127.0.0.1:5000/ask" `
   -Body ([System.Text.Encoding]::UTF8.GetBytes('{"question":"周勋毕业于哪所大学？"}'))
 ```
 
-
-
-##  项目局限性
-
-该 Demo 为教学/验证版本，存在以下问题：
-
-### 无真正检索（伪RAG）
-
-* 直接把整个 knowledge.txt 拼进 Prompt
-* ❌ 无向量检索
-* ❌ 无 Top-K
-
----
-
-### Prompt 容易失控
-
-* 模型可能忽略上下文
-* 容易出现幻觉
-
----
-
-### 无工程化能力
-
-* ❌ 无工作流编排
-* ❌ 无多节点处理
-* ❌ 无可视化调试
-
----
-
-### 性能问题
-
-* 每次请求加载整个知识库
-* Token 消耗高
+解决后正确回答：
+```text
+根据参考资料,周勋毕业于南京工业大学。
+```
+<img width="1256" height="469" alt="屏幕截图 2026-04-25 234401" src="https://github.com/user-attachments/assets/c4cd1a68-2e86-4f8a-9484-6ad00cb9c90c" />
 
 ---
 
