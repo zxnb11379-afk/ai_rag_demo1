@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify
 from openai import OpenAI
 import os
-print("当前文件路径：", os.path.abspath(__file__))
+
 app = Flask(__name__)
 
 # 配置 DeepSeek API
@@ -16,19 +16,31 @@ with open("knowledge.txt", "r", encoding="utf-8") as f:
 
 @app.route("/ask", methods=["POST"])
 def ask():
-    data = request.get_json(silent=True)
-    if not data:
-        return jsonify({"error": "Invalid JSON"}), 400
+    # 1. 获取用户问题
+    question = request.json.get("question", "")
 
-    question = data.get("question", "").strip()
+    # 2. 拼接Prompt：知识 + 用户问题
+    prompt = f"""你是一个招聘助手。请根据以下参考资料回答用户问题。
+如果资料中没有答案，请如实说不知道。
 
-    print("用户问题:", question)
+参考资料：
+{knowledge}
 
-    # 命中知识库
-    if "周勋" in question:
-        return jsonify({"answer": "南京工业大学"})
+用户问题：{question}
 
-    # 默认兜底（非常重要）
-    return jsonify({"answer": "资料中没有相关信息"})
+请回答："""
+
+    # 3. 调用大模型API
+    response = client.chat.completions.create(
+        model="deepseek-chat",
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
+    )
+
+    # 4. 提取并返回答案
+    answer = response.choices[0].message.content
+    return jsonify({"answer": answer})
+
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(debug=True, port=5000)
