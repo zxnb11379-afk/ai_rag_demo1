@@ -1,0 +1,2 @@
+# ai_rag_demo1
+基于Flask和大模型API的RAG问答系统的Demo
