@@ -1,4 +1,4 @@
-# 基于 Flask + 大模型 API 的简易 RAG 问答系统
+# 基于 Flask 的 Prompt 注入式问答系统（简化版RAG）
 
 ## 项目简介
 
