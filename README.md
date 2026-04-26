@@ -65,7 +65,7 @@ from flask import Flask, request, jsonify
 from openai import OpenAI
 
 app = Flask(__name__)
-client = OpenAI(api_key="your_api_key")
+client = OpenAI(api_key=os.getenv("DEEPSEEK_API_KEY"))
 
 @app.route("/ask", methods=["POST"])
 def ask():
