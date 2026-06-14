@@ -51,9 +51,9 @@ Flask API 接收
 ## 知识库示例
 
 ```text
-周勋毕业于南京工业大学。
-周勋掌握Python和Java开发。
-周勋有RAG项目经验。
+小明毕业于南京工业大学。
+小明掌握Python和Java开发。
+小明有RAG项目经验。
 ```
 
 ---
@@ -169,7 +169,7 @@ API余额不足
 Invoke-RestMethod -Uri "http://127.0.0.1:5000/ask" `
   -Method POST `
   -ContentType "application/json" `
-  -Body '{"question":"周勋毕业于哪所大学？"}'
+  -Body '{"question":"小明毕业于哪所大学？"}'
 ```
 
 ```text
@@ -209,11 +209,8 @@ Invoke-RestMethod -Uri "http://127.0.0.1:5000/ask" `
 
 解决后正确回答：
 ```text
-根据参考资料,周勋毕业于南京工业大学。
-```
-<img width="1256" height="469" alt="屏幕截图 2026-04-25 234401" src="https://github.com/user-attachments/assets/c4cd1a68-2e86-4f8a-9484-6ad00cb9c90c" />
+根据参考资料,小明毕业于南京工业大学。
 
----
 
 ## 项目收获
 
